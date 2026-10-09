@@ -1,0 +1,15 @@
+# Editor swap files
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local overrides
+*.local.vim
+*.local.lua
+
+# Neovim session / undo
+*.un~
