@@ -4,6 +4,8 @@ wk.add({
     { "<leader>f", group = "Find" },
     { "<leader>n", group = "NERDTree" },
     { "<leader>t", group = "ToggleTerm" },
+	{ "<leader>h", group = "Git hunks" },
+	{ "<leader>g", group = "Git toggles" },
 })
 
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Next diagnostic" })
