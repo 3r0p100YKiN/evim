@@ -105,8 +105,8 @@ require('gitsigns').setup {
     map('n', '<leader>hq', gitsigns.setqflist)
 
     -- Toggles
-    map('n', '<leader>gtb', gitsigns.toggle_current_line_blame)
-    map('n', '<leader>gtw', gitsigns.toggle_word_diff)
+    map('n', '<leader>gb', gitsigns.toggle_current_line_blame)
+    map('n', '<leader>gw', gitsigns.toggle_word_diff)
 
     -- Text object
     map({'o', 'x'}, 'ih', gitsigns.select_hunk)
