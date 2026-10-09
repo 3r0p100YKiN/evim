@@ -27,4 +27,4 @@ lua require("mason").setup()
 lua require("mason-lspconfig-config")
 lua require("mason-tool-installer-config")
 lua require("cmp-config")
-
+lua require("gitsigns-config")
