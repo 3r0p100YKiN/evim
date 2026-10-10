@@ -15,6 +15,7 @@
 - **Сниппеты** — `vim-vsnip`
 - **Treesitter** — подсветка и парсеры (автовыбор ветки `main`/`master` в зависимости от версии Neovim)
 - **Автопары** — `nvim-autopairs` с интеграцией в cmp
+- **Форматирование при сохранении** — `conform.nvim`
 - **Файловый менеджер** — NERDTree
 - **Терминал** — ToggleTerm
 - **Поиск** — fzf + fzf.vim
@@ -26,7 +27,7 @@
 
 ## 📋 Требования
 
-- **Neovim** ≥ 0.10 (рекомендуется 0.11 или 0.12)
+- **Neovim** ≥ 0.11 (рекомендуется 0.12+)
 - **git**, **curl**, **gcc**, **make**, **unzip**
 - **nodejs** + **npm**
 - **python3** + **pip**
@@ -38,7 +39,8 @@
 
 **(рекомендуется) Alt Linux / p11:**
 ```sh
-sudo apt-get install git curl gcc make unzip nodejs npm python3-module-pip ripgrep fd fzf universal-ctags wl-clipboard xclip
+sudo apt-get install git curl gcc make unzip nodejs npm python3-module-pip\
+    ripgrep fd fzf universal-ctags wl-clipboard xclip
 ```
 
 **Arch Linux:**
@@ -138,13 +140,19 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 - `pyright`
 - `clangd`
 - `bashls`
+- `rust_analyzer`
+- `ts_ls`
+- `html`
+- `cssls`
+- `jsonls`
 
 **Инструменты:**
 - `stylua` — форматтер Lua
 - `black` — форматтер Python
-- `ruff` — линтер Python
-- `shellcheck` — линтер Bash
+- `shfmt` — форматтер Shell/Bash
 - `clang-format` — форматтер C/C++
+- `prettier` — форматтер JS/TS/HTML/CSS/JSON/YAML/Markdown
+- `shellcheck` — линтер Bash
 
 Прогресс:
 
@@ -173,7 +181,32 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 
 ---
 
-## ✅ Шаг 7. Проверка
+## 🧼 Шаг 7. Форматирование
+
+Форматирование настроено через `conform.nvim`.
+
+Поддерживаемые файлтипы:
+
+| Filetype | Форматтер |
+|---|---|
+| `lua` | `stylua` |
+| `python` | `black` |
+| `sh`, `bash` | `shfmt` |
+| `c`, `cpp` | `clang-format` |
+| `javascript`, `typescript` | `prettier` |
+| `javascriptreact`, `typescriptreact` | `prettier` |
+| `html`, `css`, `json`, `yaml`, `markdown` | `prettier` |
+
+Форматирование при сохранении:
+
+- `timeout_ms = 1000`
+- `lsp_format = "fallback"` — если внешнего форматтера нет, используется LSP.
+
+Для Rust форматтер не указан: форматирование выполняет `rust_analyzer`.
+
+---
+
+## ✅ Шаг 8. Проверка
 
 ```vim
 :checkhealth
@@ -184,7 +217,8 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 - работает автодополнение (`<C-Space>` или автоматически);
 - есть диагностика (подчёркивания, `]d` / `[d`);
 - открывается терминал (`<leader>tt`);
-- работает поиск файлов (`<leader>ff`).
+- работает поиск файлов (`<leader>ff`);
+- файл форматируется при сохранении (`:w`).
 
 ---
 
@@ -223,32 +257,61 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 | `<Esc>` / `jk` | Выход из терминального режима |
 | `<C-h/j/k/l>` | Навигация между окнами из терминала |
 
-### Прочее
+### Git (gitsigns.nvim)
+
+**Навигация по хункам:**
+
 | Клавиша | Действие |
 |---|---|
-| `<leader>wk` | Меню WhichKey |
+| `]c` | Следующий хунк |
+| `[c` | Предыдущий хунк |
+
+**Действия с хунками:**
+
+| Клавиша | Действие |
+|---|---|
+| `<leader>hs` | Stage hunk / stage выделенные хунки |
+| `<leader>hr` | Reset hunk / reset выделенные хунки |
+| `<leader>hS` | Stage buffer |
+| `<leader>hR` | Reset buffer |
+| `<leader>hp` | Preview hunk |
+| `<leader>hi` | Preview hunk inline |
+| `<leader>hb` | Blame line |
+| `<leader>hd` | Diff this |
+| `<leader>hD` | Diff this `~` |
+| `<leader>hQ` | Все хунки → quickfix |
+| `<leader>hq` | Хунки → quickfix |
+
+**Переключатели:**
+
+| Клавиша | Действие |
+|---|---|
+| `<leader>gb` | Toggle line blame |
+| `<leader>gw` | Toggle word diff |
+
+**Text object:**
+
+| Клавиша | Действие |
+|---|---|
+| `ih` в `o`/`x` режиме | Выделить хунк |
+
+### Автодополнение (nvim-cmp)
+| Клавиша | Действие |
+|---|---|
 | `<C-Space>` | Вызвать автодополнение |
 | `<C-e>` | Отменить автодополнение |
-| `<CR>` | Подтвердить выбранный пункт cmp |
+| `<CR>` | Подтвердить выбранный пункт |
 | `<C-b>` / `<C-f>` | Скролл документации |
 
----
-
-## 📁 Структура
-
-```
-~/.config/nvim/
-├── init.vim                        # Точка входа, базовые опции
-├── plugins.vim                     # Список плагинов (vim-plug)
-└── lua/
-    ├── autopairs-config.lua
-    ├── cmp-config.lua
-    ├── keymap-config.lua
-    ├── mason-lspconfig-config.lua
-    ├── mason-tool-installer-config.lua
-    ├── toggleterm-config.lua
-    └── treesitter-config.lua
-```
+### Which-key
+| Клавиша | Действие |
+|---|---|
+| `<leader>wk` | Открыть меню WhichKey |
+| `<leader>f` | Группа «Find» |
+| `<leader>n` | Группа «NERDTree» |
+| `<leader>t` | Группа «ToggleTerm» |
+| `<leader>h` | Группа «Git hunks» |
+| `<leader>g` | Группа «Git toggles» |
 
 ---
 
@@ -292,4 +355,7 @@ mv ~/.cache/nvim.bak ~/.cache/nvim 2>/dev/null
 - Глобальные **capabilities** для LSP задаются один раз в `cmp-config.lua` через `vim.lsp.config("*", { capabilities = ... })`.
 - Для `clangd` указан `--query-driver=/usr/bin/g++`. Если путь отличается — укажи его в `mason-lspconfig-config.lua` (узнать: `which g++`).
 - `map_c_h` и `map_c_w` в autopairs отключены, чтобы не конфликтовать со стандартным `<C-h>`/`<C-w>`.
+- `nvim-autopairs` отключён для `TelescopePrompt`, `spectre_panel`, `snacks_picker_input`, `fzf`, а также в macro и replace mode.
+- `conform.nvim` форматирует файлы при сохранении и использует LSP как fallback.
+- `gitsigns.nvim` даёт навигацию по хункам, stage/reset, blame, diff и quickfix.
 - Терминальные хоткеи вешаются через `autocmd TermOpen term://*` — работают во **всех** терминалах, не только в ToggleTerm.
