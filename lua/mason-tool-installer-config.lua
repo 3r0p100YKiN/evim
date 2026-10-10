@@ -1,10 +1,11 @@
 require("mason-tool-installer").setup({
     ensure_installed = {
-        "stylua",       -- Lua formatter
-        "black",        -- Python formatter
-        "ruff",         -- Python linter
-        "shellcheck",   -- Bash linter
-        "clang-format", -- C/C++ formatter
+        "stylua",
+        "black",
+        "shfmt",       -- добавили
+        "clang-format",
+        "prettier",    -- добавили
+        "shellcheck",  -- оставляем как линтер
     },
-    auto_install = true, -- Устанавливать автоматически при запуске
+    auto_install = true,
 })

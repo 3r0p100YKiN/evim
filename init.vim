@@ -3,9 +3,9 @@
 :set signcolumn=yes
 :set relativenumber number
 :set smarttab
-:set tabstop=4
-:set shiftwidth=4
-:set softtabstop=4
+:set tabstop=2
+:set shiftwidth=2
+:set softtabstop=2
 :set autoindent
 :set clipboard=unnamedplus
 let g:mapleader = " "
@@ -26,5 +26,6 @@ lua require("treesitter-config")
 lua require("mason").setup()
 lua require("mason-lspconfig-config")
 lua require("mason-tool-installer-config")
+lua require("conform-config")
 lua require("cmp-config")
 lua require("gitsigns-config")

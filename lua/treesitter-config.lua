@@ -1,5 +1,3 @@
---!!ДЛЯ БОЛЕЕ НОВОЙ ВЕРСИИ NVIM 012!!
-
 local is_new_nvim = vim.fn.has('nvim-0.12') == 1
 
 if is_new_nvim then

@@ -21,6 +21,7 @@ Plug 'https://github.com/mason-org/mason.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'https://github.com/mason-org/mason-lspconfig.nvim'
 Plug 'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim'
+Plug 'https://github.com/stevearc/conform.nvim'
 
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
