@@ -33,18 +33,14 @@ endif
 
 execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
 
-augroup EvimPlugInstall
-  autocmd!
-  autocmd VimEnter *
-        \ if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-        \ |   echomsg '[Evim] Обнаружены неустановленные плагины, запускаю PlugInstall...'
-        \ |   PlugInstall --sync
-        \ |   echomsg '[Evim] PlugInstall завершён. Перезагружаю конфиг...'
-        \ |   source $MYVIMRC
-        \ | else
-        \ |   echomsg '[Evim] Все плагины на месте.'
-        \ | endif
-augroup END
+function! s:evim_bootstrap() abort
+  if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    echomsg '[Evim] Устанавливаю плагины...'
+    PlugInstall --sync
+    echomsg '[Evim] Плагины установлены.'
+    " пересобрать runtimepath — plug#end() увидит новые директории
+    execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+  endif
 
 lua require("keymap-config")
 lua require("autopairs-config")
@@ -57,3 +53,9 @@ lua require("mason-tool-installer-config")
 lua require("conform-config")
 lua require("cmp-config")
 lua require("gitsigns-config")
+endfunction
+
+augroup EvimBootstrap
+  autocmd!
+  autocmd VimEnter * call s:evim_bootstrap()
+augroup END
