@@ -10,6 +10,7 @@ Plug 'https://github.com/junegunn/fzf.vim'
 Plug 'https://github.com/akinsho/toggleterm.nvim'
 Plug 'https://github.com/windwp/nvim-autopairs'
 Plug 'https://github.com/lewis6991/gitsigns.nvim'
+Plug 'https://github.com/dinhhuy258/git.nvim'
 if has('nvim-0.12')
   " Для Neovim 0.12+ используется новая ветка main
   Plug 'https://github.com/nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate', 'branch': 'main' }
