@@ -33,8 +33,8 @@
   - [🔤 Nerd Fonts (опционально)](#-nerd-fonts-опционально)
 - [💾 Шаг 1. Резервная копия существующей конфигурации](#-шаг-1-резервная-копия-существующей-конфигурации)
 - [📥 Шаг 2. Клонирование конфигурации](#-шаг-2-клонирование-конфигурации)
-- ~~[🔌 Шаг 3. Установка vim-plug (устарело)](#-шаг-3-установка-vim-plug-устарело)~~
-- ~~[🚀 Шаг 4. Установка плагинов (устарело)](#-шаг-4-установка-плагинов-устарело)~~
+- [🔌 Шаг 3. Установка vim-plug](#-шаг-3-установка-vim-plug)
+- [🚀 Шаг 4. Первый запуск](#-шаг-4-первый-запуск)
 - [🧩 Шаг 5. Установка LSP-серверов и инструментов](#-шаг-5-установка-lsp-серверов-и-инструментов)
 - [🌳 Шаг 6. Установка Treesitter-парсеров](#-шаг-6-установка-treesitter-парсеров)
 - [🧼 Шаг 7. Форматирование](#-шаг-7-форматирование)
@@ -148,40 +148,22 @@ git clone https://github.com/3r0p100YKiN/evim.git ~/.config/nvim
 
 ---
 
-## Шаг 3-4
-Запусти nvim с флагами для первоначальной настройки: 
-
-```sh
-nvim --headless "+Evim" +qa
-```
-
----
-
-<details>
-<summary>## 🔌 Шаг 3. Установка vim-plug (устарело)</summary>
+## 🔌 Шаг 3. Установка vim-plug
 
 ```sh
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 ```
-</details>
 
 ---
 
-<details>
-<summary>## 🚀 Шаг 4. Установка плагинов (устарело)</summary>
- Логика в `init.vim`:
+## 🚀 Шаг 4. Первый запуск
 
- ```vim
- if empty(glob(data_dir . '/autoload/plug.vim'))
-   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-   autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) | PlugInstall --sync | source $MYVIMRC | endif
- endif
- ```
+Запусти nvim с флагами для первоначальной настройки: 
 
- Достаточно просто запустить `nvim` — vim-plug скачается сам, а затем выполнится `PlugInstall`.
- После установки Neovim может перезапуститься автоматически.
-</details>
+```sh
+nvim --headless "+PlugInstall" +qa
+```
 
 ---
 
