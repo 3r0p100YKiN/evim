@@ -33,21 +33,38 @@ endif
 
 execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
 
+let s:marker = stdpath('state') . '/evim-bootstrapped'
+
 function! s:evim_bootstrap() abort
-  if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-    echomsg '[Evim] Устанавливаю плагины, подожди...'
-    PlugInstall --sync
+  if !filereadable(s:marker)
+    if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      echomsg '[Evim] Первый запуск, устанавливаю плагины...'
+      PlugInstall --sync
+      execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+    endif
 
     if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
       echohl ErrorMsg
-      echomsg '[Evim] Не все плагины установились. Пропускаю загрузку конфига.'
-      echomsg '[Evim] Запусти :PlugInstall вручную и перезапусти Neovim.'
+      echomsg '[Evim] Не все плагины установились. Маркер не создан.'
+      echomsg '[Evim] Проверь сеть и запусти Neovim снова.'
       echohl None
       return
     endif
 
-    " Пересобираем runtimepath — plug#end() увидит новые каталоги
-    execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+    call writefile([], s:marker)
+    redraw
+    echohl WarningMsg
+    echo '[Evim] Установка завершена. Нажми ENTER и перезапусти Neovim.'
+    echohl None
+    return
+  endif
+
+  " Страховка на случай, если плагин удалили вручную
+  if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    echohl ErrorMsg
+    echomsg '[Evim] Часть плагинов отсутствует. Запусти :PlugInstall и перезапусти Neovim.'
+    echohl None
+    return
   endif
 
   lua require("keymap-config")
