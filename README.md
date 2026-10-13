@@ -148,11 +148,17 @@ git clone https://github.com/3r0p100YKiN/evim.git ~/.config/nvim
 
 ---
 
+## Шаг 3-4
+Запусти nvim с флагами для первоначальной настройки: 
+
+```sh
+nvim --headless "+Evim" +qa
+```
+
+---
+
 <details>
 <summary>## 🔌 Шаг 3. Установка vim-plug (устарело)</summary>
-
-> ✅ **Начиная с текущей версии `init.vim`, vim-plug устанавливается автоматически при первом запуске Neovim.**
-> Блок ниже оставлен только для исторической справки / ручной установки.
 
 ```sh
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -164,8 +170,6 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 
 <details>
 <summary>## 🚀 Шаг 4. Установка плагинов (устарело)</summary>
-
-> ✅ **Плагины теперь устанавливаются автоматически при первом запуске Neovim.**
  Логика в `init.vim`:
 
  ```vim

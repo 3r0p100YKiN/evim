@@ -10,77 +10,83 @@
 :set clipboard=unnamedplus
 let g:mapleader = " "
 let g:airline_theme = 'luna'
-let data_dir = stdpath('data') . '/site'
-let plug_path = data_dir . '/autoload/plug.vim'
 
-if empty(glob(plug_path))
-  echomsg '[Evim] vim-plug не найден, скачиваю...'
-  execute 'silent! !curl -fLo ' . plug_path . ' --create-dirs ' .
-        \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  if empty(glob(plug_path))
-    echohl ErrorMsg
-    echomsg '[Evim] Не удалось скачать vim-plug. Проверь сеть и curl.'
-    echohl None
-  else
-    echomsg '[Evim] vim-plug успешно установлен.'
-  endif
-endif
+let s:plug_path = stdpath('data') . '/site/autoload/plug.vim'
+let s:marker    = stdpath('state') . '/evim-bootstrapped'
 
+function! s:evim_install() abort
+  if empty(glob(s:plug_path))
+    echomsg '[Evim] Шаг 1/3: скачиваю vim-plug...'
+    call mkdir(fnamemodify(s:plug_path, ':h'), 'p')
+    execute 'silent! !curl -fLo ' . s:plug_path . ' --create-dirs ' .
+          \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-"       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-" sudo apt-get install git curl gcc make unzip nodejs npm python3-module-pip ripgrep fd fzf universal-ctags wl-clipboard xclip 
-
-execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
-
-let s:marker = stdpath('state') . '/evim-bootstrapped'
-
-function! s:evim_bootstrap() abort
-  if !filereadable(s:marker)
-    if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-      echomsg '[Evim] Первый запуск, устанавливаю плагины...'
-      PlugInstall --sync
-      execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
-    endif
-
-    if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    if empty(glob(s:plug_path))
       echohl ErrorMsg
-      echomsg '[Evim] Не все плагины установились. Маркер не создан.'
-      echomsg '[Evim] Проверь сеть и запусти Neovim снова.'
+      echomsg '[Evim] Не удалось скачать vim-plug. Проверь сеть и curl.'
       echohl None
       return
     endif
-
-    call writefile([], s:marker)
-    redraw
-    echohl WarningMsg
-    echo '[Evim] Установка завершена. Нажми ENTER и перезапусти Neovim.'
-    echohl None
-    return
+    echomsg '[Evim] vim-plug установлен.'
+  else
+    echomsg '[Evim] Шаг 1/3: vim-plug уже на месте.'
   endif
 
-  " Страховка на случай, если плагин удалили вручную
+  execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+
   if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    echomsg '[Evim] Шаг 2/3: устанавливаю плагины...'
+    PlugInstall --sync
+  else
+    echomsg '[Evim] Шаг 2/3: все плагины уже установлены.'
+  endif
+
+  let s:missing = filter(values(g:plugs), '!isdirectory(v:val.dir)')
+  if !empty(s:missing)
     echohl ErrorMsg
-    echomsg '[Evim] Часть плагинов отсутствует. Запусти :PlugInstall и перезапусти Neovim.'
+    echomsg '[Evim] Не установились: '
+          \ . join(map(copy(s:missing), 'fnamemodify(v:val.dir, ":t")'), ', ')
+    echomsg '[Evim] Запусти :Evim ещё раз.'
     echohl None
     return
   endif
 
-  lua require("keymap-config")
-  lua require("autopairs-config")
-  lua require("toggleterm-config")
-  lua require("toggleterm").setup()
-  lua require("treesitter-config")
-  lua require("mason").setup()
-  lua require("mason-lspconfig-config")
-  lua require("mason-tool-installer-config")
-  lua require("conform-config")
-  lua require("cmp-config")
-  lua require("gitsigns-config")
+  echomsg '[Evim] Шаг 3/3: сохраняю маркер установки...'
+  call mkdir(stdpath('state'), 'p')
+  call writefile([], s:marker)
+
+  " plug#end() пересоберёт runtimepath с учётом новых директорий
+  execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+
+  echohl WarningMsg
+  echomsg '[Evim] Установка завершена. Перезапусти Neovim.'
+  echohl None
 endfunction
 
-augroup EvimBootstrap
-  autocmd!
-  autocmd VimEnter * call s:evim_bootstrap()
-augroup END
+command! Evim call s:evim_install()
+
+execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
+
+if filereadable(s:marker)
+  if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    echohl ErrorMsg
+    echomsg '[Evim] Часть плагинов отсутствует. Запусти :Evim.'
+    echohl None
+  else
+    lua require("keymap-config")
+    lua require("autopairs-config")
+    lua require("toggleterm-config")
+    lua require("toggleterm").setup()
+    lua require("treesitter-config")
+    lua require("mason").setup()
+    lua require("mason-lspconfig-config")
+    lua require("mason-tool-installer-config")
+    lua require("conform-config")
+    lua require("cmp-config")
+    lua require("gitsigns-config")
+  endif
+else
+  echohl WarningMsg
+  echomsg '[Evim] Конфигурация ещё не установлена. Выполни :Evim'
+  echohl None
+endif
