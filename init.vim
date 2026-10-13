@@ -35,24 +35,32 @@ execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
 
 function! s:evim_bootstrap() abort
   if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-    echomsg '[Evim] Устанавливаю плагины...'
+    echomsg '[Evim] Устанавливаю плагины, подожди...'
     PlugInstall --sync
-    echomsg '[Evim] Плагины установлены.'
-    " пересобрать runtimepath — plug#end() увидит новые директории
+
+    if !empty(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      echohl ErrorMsg
+      echomsg '[Evim] Не все плагины установились. Пропускаю загрузку конфига.'
+      echomsg '[Evim] Запусти :PlugInstall вручную и перезапусти Neovim.'
+      echohl None
+      return
+    endif
+
+    " Пересобираем runtimepath — plug#end() увидит новые каталоги
     execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
   endif
 
-lua require("keymap-config")
-lua require("autopairs-config")
-lua require("toggleterm-config")
-lua require("toggleterm").setup()
-lua require("treesitter-config")
-lua require("mason").setup()
-lua require("mason-lspconfig-config")
-lua require("mason-tool-installer-config")
-lua require("conform-config")
-lua require("cmp-config")
-lua require("gitsigns-config")
+  lua require("keymap-config")
+  lua require("autopairs-config")
+  lua require("toggleterm-config")
+  lua require("toggleterm").setup()
+  lua require("treesitter-config")
+  lua require("mason").setup()
+  lua require("mason-lspconfig-config")
+  lua require("mason-tool-installer-config")
+  lua require("conform-config")
+  lua require("cmp-config")
+  lua require("gitsigns-config")
 endfunction
 
 augroup EvimBootstrap
