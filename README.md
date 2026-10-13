@@ -1,4 +1,5 @@
 # Evim
+
 <p align="center">
   <img src="./screenshot.png" alt="Скриншот Evim" width="800">
 </p>
@@ -24,6 +25,32 @@
 - **Git-маркеры** — gitsigns
 
 ---
+## Содержание
+[📋 Требования](## 📋 Требования)
+[Установка зависимостей](### Установка зависимостей)
+  [🔤 Nerd Fonts (опционально)](### 🔤 Nerd Fonts (опционально))
+[💾 Шаг 1. Резервная копия существующей конфигурации](## 💾 Шаг 1. Резервная копия существующей конфигурации)
+[📥 Шаг 2. Клонирование конфигурации](## 📥 Шаг 2. Клонирование конфигурации)
+[🔌 Шаг 3. Установка vim-plug (устарело)](## 🔌 Шаг 3. Установка vim-plug (устарело))
+[🚀 Шаг 4. Установка плагинов (устарело)](## 🚀 Шаг 4. Установка плагинов (устарело))
+[🧩 Шаг 5. Установка LSP-серверов и инструментов](## 🧩 Шаг 5. Установка LSP-серверов и инструментов)
+[🌳 Шаг 6. Установка Treesitter-парсеров](## 🌳 Шаг 6. Установка Treesitter-парсеров)
+[🧼 Шаг 7. Форматирование](## 🧼 Шаг 7. Форматирование)
+[✅ Шаг 8. Проверка](## ✅ Шаг 8. Проверка)
+[⌨️ Горячие клавиши](## ⌨️ Горячие клавиши)
+  [LSP](### LSP)
+  [Диагностика (LSP)](### Диагностика (LSP))
+  [Поиск (fzf)](### Поиск (fzf))
+  [NERDTree](### NERDTree)
+  [Терминал (ToggleTerm)](### Терминал (ToggleTerm))
+  [Git (gitsigns.nvim)](### Git (gitsigns.nvim))
+  [Автодополнение (nvim-cmp)](### Автодополнение (nvim-cmp))
+  [Which-key](### Which-key)
+[🔄 Обновление](## 🔄 Обновление)
+[🗑️ Откат к прежней конфигурации](## 🗑️ Откат к прежней конфигурации)
+[📝 Заметки](## 📝 Заметки)
+[FAQ](## FAQ)
+---
 
 ## 📋 Требования
 
@@ -38,18 +65,21 @@
 ### Установка зависимостей
 
 **(рекомендуется) Alt Linux / p11:**
+
 ```sh
 sudo apt-get install git curl gcc make unzip nodejs npm python3-module-pip\
     ripgrep fd fzf universal-ctags wl-clipboard xclip
 ```
 
 **Arch Linux:**
+
 ```sh
 sudo pacman -S git curl gcc make unzip nodejs npm python-pip \
     ripgrep fd fzf ctags wl-clipboard xclip
 ```
 
 **Debian / Ubuntu:**
+
 ```sh
 sudo apt install git curl gcc make unzip nodejs npm python3-pip \
     ripgrep fd-find fzf universal-ctags wl-clipboard xclip
@@ -84,6 +114,7 @@ fc-cache -fv
 Если конфиг Neovim уже существует, необходимо сделать бэкап, иначе он будет перезаписан.
 
 **Вариант А — сохранить старое (рекомендуется):**
+
 ```sh
 mv ~/.config/nvim{,.bak}
 mv ~/.local/share/nvim{,.bak}
@@ -92,6 +123,7 @@ mv ~/.cache/nvim{,.bak}
 ```
 
 **Вариант Б — полностью удалить:**
+
 ```sh
 rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
 ```
@@ -106,7 +138,10 @@ git clone https://github.com/3r0p100YKiN/evim.git ~/.config/nvim
 
 ---
 
-## 🔌 Шаг 3. Установка vim-plug
+## 🔌 Шаг 3. Установка vim-plug (устарело)
+
+> ✅ **Начиная с текущей версии `init.vim`, vim-plug устанавливается автоматически при первом запуске Neovim.**
+> Блок ниже оставлен только для исторической справки / ручной установки.
 
 ```sh
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -115,19 +150,20 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 
 ---
 
-## 🚀 Шаг 4. Установка плагинов
+## 🚀 Шаг 4. Установка плагинов (устарело)
 
-```sh
-nvim
-```
+> ✅ **Плагины теперь устанавливаются автоматически при первом запуске Neovim.**
+> Логика в `init.vim`:
 
-Внутри:
+ ```vim
+ if empty(glob(data_dir . '/autoload/plug.vim'))
+   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+   autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) | PlugInstall --sync | source $MYVIMRC | endif
+ endif
+ ```
 
-```vim
-:PlugInstall
-```
-
-Дождись завершения. Если появились ошибки — перезапусти `:PlugInstall` ещё раз.
+ Достаточно просто запустить `nvim` — vim-plug скачается сам, а затем выполнится `PlugInstall`.
+ После установки Neovim может перезапуститься автоматически.
 
 ---
 
@@ -136,6 +172,7 @@ nvim
 Mason, mason-lspconfig и mason-tool-installer настроены на автозапуск. При **первом** старте Neovim подтянутся:
 
 **LSP-серверы:**
+
 - `lua_ls`
 - `pyright`
 - `clangd`
@@ -147,6 +184,7 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 - `jsonls`
 
 **Инструменты:**
+
 - `stylua` — форматтер Lua
 - `black` — форматтер Python
 - `shfmt` — форматтер Shell/Bash
@@ -187,15 +225,15 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 
 Поддерживаемые файлтипы:
 
-| Filetype | Форматтер |
-|---|---|
-| `lua` | `stylua` |
-| `python` | `black` |
-| `sh`, `bash` | `shfmt` |
-| `c`, `cpp` | `clang-format` |
-| `javascript`, `typescript` | `prettier` |
-| `javascriptreact`, `typescriptreact` | `prettier` |
-| `html`, `css`, `json`, `yaml`, `markdown` | `prettier` |
+| Filetype                                  | Форматтер      |
+| ----------------------------------------- | -------------- |
+| `lua`                                     | `stylua`       |
+| `python`                                  | `black`        |
+| `sh`, `bash`                              | `shfmt`        |
+| `c`, `cpp`                                | `clang-format` |
+| `javascript`, `typescript`                | `prettier`     |
+| `javascriptreact`, `typescriptreact`      | `prettier`     |
+| `html`, `css`, `json`, `yaml`, `markdown` | `prettier`     |
 
 Форматирование при сохранении:
 
@@ -213,6 +251,7 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 ```
 
 Открой любой `.lua` / `.py` / `.c` файл и проверь:
+
 - через 2–3 сек. инициализируется LSP (`:LspInfo` покажет активные серверы);
 - работает автодополнение (`<C-Space>` или автоматически);
 - есть диагностика (подчёркивания, `]d` / `[d`);
@@ -226,92 +265,112 @@ Mason, mason-lspconfig и mason-tool-installer настроены на авто�
 
 **Leader** — пробел.
 
+### LSP
+
+| Клавиша      | Действие                           |
+| ------------ | ---------------------------------- |
+| `gd`         | Перейти к определению              |
+| `gD`         | Перейти к объявлению               |
+| `gi`         | Перейти к реализации               |
+| `gr`         | Список ссылок                      |
+| `K`          | Документация под курсором          |
+| `<leader>rn` | Переименовать символ               |
+| `<leader>ca` | Code action                        |
+| `<leader>f`  | Форматировать буфер                |
+| `[d` / `]d`  | Предыдущая / следующая диагностика |
+
 ### Диагностика (LSP)
-| Клавиша | Действие |
-|---|---|
-| `]d` | Следующая диагностика |
-| `[d` | Предыдущая диагностика |
+
+| Клавиша     | Действие                   |
+| ----------- | -------------------------- |
+| `]d`        | Следующая диагностика      |
+| `[d`        | Предыдущая диагностика     |
 | `<leader>e` | Плавающее окно диагностики |
-| `<leader>q` | Диагностика в loclist |
+| `<leader>q` | Диагностика в loclist      |
 
 ### Поиск (fzf)
-| Клавиша | Действие |
-|---|---|
-| `<leader>ff` | Поиск файлов |
+
+| Клавиша      | Действие                |
+| ------------ | ----------------------- |
+| `<leader>ff` | Поиск файлов            |
 | `<leader>fl` | Поиск по строкам буфера |
 | `<leader>fw` | Поиск по открытым окнам |
 
 ### NERDTree
-| Клавиша | Действие |
-|---|---|
+
+| Клавиша      | Действие         |
+| ------------ | ---------------- |
 | `<leader>nt` | Открыть NERDTree |
-| `<leader>nf` | NERDTree Find |
+| `<leader>nf` | NERDTree Find    |
 | `<leader>ne` | NERDTree Explore |
 
 ### Терминал (ToggleTerm)
-| Клавиша | Действие |
-|---|---|
-| `<leader>tt` | Открыть/закрыть терминал |
-| `<leader>tb` | Терминал в новой вкладке |
-| `<leader>tf` | Плавающий терминал |
-| `<Esc>` / `jk` | Выход из терминального режима |
-| `<C-h/j/k/l>` | Навигация между окнами из терминала |
+
+| Клавиша        | Действие                            |
+| -------------- | ----------------------------------- |
+| `<leader>tt`   | Открыть/закрыть терминал            |
+| `<leader>tb`   | Терминал в новой вкладке            |
+| `<leader>tf`   | Плавающий терминал                  |
+| `<Esc>` / `jk` | Выход из терминального режима       |
+| `<C-h/j/k/l>`  | Навигация между окнами из терминала |
 
 ### Git (gitsigns.nvim)
 
 **Навигация по хункам:**
 
-| Клавиша | Действие |
-|---|---|
-| `]c` | Следующий хунк |
-| `[c` | Предыдущий хунк |
+| Клавиша | Действие        |
+| ------- | --------------- |
+| `]c`    | Следующий хунк  |
+| `[c`    | Предыдущий хунк |
 
 **Действия с хунками:**
 
-| Клавиша | Действие |
-|---|---|
+| Клавиша      | Действие                            |
+| ------------ | ----------------------------------- |
 | `<leader>hs` | Stage hunk / stage выделенные хунки |
 | `<leader>hr` | Reset hunk / reset выделенные хунки |
-| `<leader>hS` | Stage buffer |
-| `<leader>hR` | Reset buffer |
-| `<leader>hp` | Preview hunk |
-| `<leader>hi` | Preview hunk inline |
-| `<leader>hb` | Blame line |
-| `<leader>hd` | Diff this |
-| `<leader>hD` | Diff this `~` |
-| `<leader>hQ` | Все хунки → quickfix |
-| `<leader>hq` | Хунки → quickfix |
+| `<leader>hS` | Stage buffer                        |
+| `<leader>hR` | Reset buffer                        |
+| `<leader>hp` | Preview hunk                        |
+| `<leader>hi` | Preview hunk inline                 |
+| `<leader>hb` | Blame line                          |
+| `<leader>hd` | Diff this                           |
+| `<leader>hD` | Diff this `~`                       |
+| `<leader>hQ` | Все хунки → quickfix                |
+| `<leader>hq` | Хунки → quickfix                    |
 
 **Переключатели:**
 
-| Клавиша | Действие |
-|---|---|
+| Клавиша      | Действие          |
+| ------------ | ----------------- |
 | `<leader>gb` | Toggle line blame |
-| `<leader>gw` | Toggle word diff |
+| `<leader>gw` | Toggle word diff  |
 
 **Text object:**
 
-| Клавиша | Действие |
-|---|---|
+| Клавиша               | Действие      |
+| --------------------- | ------------- |
 | `ih` в `o`/`x` режиме | Выделить хунк |
 
 ### Автодополнение (nvim-cmp)
-| Клавиша | Действие |
-|---|---|
-| `<C-Space>` | Вызвать автодополнение |
-| `<C-e>` | Отменить автодополнение |
-| `<CR>` | Подтвердить выбранный пункт |
-| `<C-b>` / `<C-f>` | Скролл документации |
+
+| Клавиша           | Действие                    |
+| ----------------- | --------------------------- |
+| `<C-Space>`       | Вызвать автодополнение      |
+| `<C-e>`           | Отменить автодополнение     |
+| `<CR>`            | Подтвердить выбранный пункт |
+| `<C-b>` / `<C-f>` | Скролл документации         |
 
 ### Which-key
-| Клавиша | Действие |
-|---|---|
+
+| Клавиша      | Действие              |
+| ------------ | --------------------- |
 | `<leader>wk` | Открыть меню WhichKey |
-| `<leader>f` | Группа «Find» |
-| `<leader>n` | Группа «NERDTree» |
-| `<leader>t` | Группа «ToggleTerm» |
-| `<leader>h` | Группа «Git hunks» |
-| `<leader>g` | Группа «Git toggles» |
+| `<leader>f`  | Группа «Find»         |
+| `<leader>n`  | Группа «NERDTree»     |
+| `<leader>t`  | Группа «ToggleTerm»   |
+| `<leader>h`  | Группа «Git hunks»    |
+| `<leader>g`  | Группа «Git toggles»  |
 
 ---
 
@@ -359,3 +418,20 @@ mv ~/.cache/nvim.bak ~/.cache/nvim 2>/dev/null
 - `conform.nvim` форматирует файлы при сохранении и использует LSP как fallback.
 - `gitsigns.nvim` даёт навигацию по хункам, stage/reset, blame, diff и quickfix.
 - Терминальные хоткеи вешаются через `autocmd TermOpen term://*` — работают во **всех** терминалах, не только в ToggleTerm.
+
+## FAQ
+
+- **Как отключить автоформатирование при сохранении?**  
+  Убери `format_on_save` в `conform-config.lua`.
+
+- **Как сменить leader?**  
+  В `init.vim`: `let g:mapleader = " "`.
+
+- **Как сменить тему airline?**  
+  В `init.vim`: `let g:airline_theme = 'luna'`.
+
+- **Как обновить плагины?**  
+  `:PlugUpdate`
+
+- **Как обновить Treesitter?**  
+  `:TSUpdate` (≤ 0.11) или `:lua require('nvim-treesitter').update()` (0.12+).

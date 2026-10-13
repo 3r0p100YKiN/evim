@@ -9,14 +9,18 @@
 :set autoindent
 :set clipboard=unnamedplus
 let g:mapleader = " "
+let g:airline_theme = 'luna'
+let data_dir = stdpath('data') . '/site'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) | PlugInstall --sync | source $MYVIMRC | endif
+endif
 
 " sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
 "       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 " sudo apt-get install git curl gcc make unzip nodejs npm python3-module-pip ripgrep fd fzf universal-ctags wl-clipboard xclip 
 
 execute 'source' fnamemodify(stdpath('config') . '/plugins.vim', ':p')
-
-let g:airline_theme = 'luna'
 
 lua require("keymap-config")
 lua require("autopairs-config")
