@@ -6,6 +6,8 @@ wk.add({
     { "<leader>t", group = "ToggleTerm" },
 	{ "<leader>h", group = "Git hunks" },
 	{ "<leader>g", group = "Git toggles" },
+    { "<leader>T", group = "TagBar" },
+    { "<leader>w", group = "WhichKey" },
 })
 
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Next diagnostic" })
@@ -26,3 +28,6 @@ vim.keymap.set("n", "<leader>tb", ":ToggleTerm direction=tab<CR>", { desc = "Ter
 vim.keymap.set("n", "<leader>tf", ":ToggleTerm direction=float<CR>", { desc = "Floating Terminal" })
 
 vim.keymap.set("n", "<leader>wk", ":WhichKey <leader><CR>", { desc = "WhichKey" })
+
+vim.keymap.set("n", "<leader>To", ":TagbarOpen<CR>", { desc = "TagBar Open" })
+vim.keymap.set("n", "<leader>Tc", ":TagbarClose<CR>", { desc = "TagBar Close" })
