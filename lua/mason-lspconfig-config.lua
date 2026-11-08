@@ -12,9 +12,21 @@ require("mason-lspconfig").setup({
 	},
 	automatic_enable = true,
 })
+-- vim.lsp.config("clangd", {
+-- 	cmd = {
+-- 		"clangd",
+-- 		"--background-index",
+-- 		"--clang-tidy",
+-- 		"--header-insertion=iwyu",
+-- 		"--completion-style=detailed",
+-- 		"--function-arg-placeholders",
+-- 		"--fallback-style=llvm",
+-- 		"--query-driver=/usr/bin/g++",
+-- 	},
+-- })
 vim.lsp.config("clangd", {
 	cmd = {
-		"clangd",
+		"/usr/bin/clangd",
 		"--background-index",
 		"--clang-tidy",
 		"--header-insertion=iwyu",
